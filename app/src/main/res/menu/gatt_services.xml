@@ -7,13 +7,13 @@
         android:showAsAction="ifRoom"
         android:title="" />
     <item
-        android:id="@+id/menu_scan"
+        android:id="@+id/menu_connect"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="Scan" />
+        android:title="Connect" />
     <item
-        android:id="@+id/menu_stop"
+        android:id="@+id/menu_disconnect"
         android:orderInCategory="101"
         android:showAsAction="ifRoom|withText"
-        android:title="Stop" />
+        android:title="Disconnect" />
 </menu>

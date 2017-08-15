@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+/**
+ * Activity for scanning and displaying available Bluetooth LE devices.
+ */
 public class MainActivity extends ListActivity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
@@ -53,6 +57,22 @@ public class MainActivity extends ListActivity {
             Toast.makeText(this, "Bluetooth is not supported", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        if (!mScanning) {
+            menu.findItem(R.id.menu_stop).setVisible(false);
+            menu.findItem(R.id.menu_scan).setVisible(true);
+            menu.findItem(R.id.menu_refresh).setActionView(null);
+        } else {
+            menu.findItem(R.id.menu_stop).setVisible(true);
+            menu.findItem(R.id.menu_scan).setVisible(false);
+            menu.findItem(R.id.menu_refresh).setActionView(
+                    R.layout.actionbar_indeterminate_progress);
+        }
+        return true;
     }
 
     @Override
