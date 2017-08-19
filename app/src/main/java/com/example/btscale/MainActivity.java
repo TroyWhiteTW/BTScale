@@ -1,5 +1,6 @@
 package com.example.btscale;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
@@ -9,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -35,6 +38,8 @@ public class MainActivity extends ListActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 10000;// 10 秒後停止掃描
 
+    private static final int REQUEST_COARSE_LOCATION_PERMISSIONS = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,33 @@ public class MainActivity extends ListActivity {
             Toast.makeText(this, "Bluetooth is not supported", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        // 檢查 6.0 以上裝置的 location 權限
+        int hasPermission = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (hasPermission == PackageManager.PERMISSION_GRANTED) {
+//            continueDoDiscovery();
+            return;
+        }
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                REQUEST_COARSE_LOCATION_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_COARSE_LOCATION_PERMISSIONS: {
+                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
+//                    continueDoDiscovery();
+                } else {
+                    Toast.makeText(this, "GG", Toast.LENGTH_SHORT).show();
+//                    cancelOperation();
+                }
+                return;
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
